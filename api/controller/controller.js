@@ -39,3 +39,17 @@ export const obtenerXId = async (req, res) => {
   res.json(result.rows[0]);
 };
 
+export const nuevoVideojuego = async (req, res) => {
+  const error = validacion(req.body);
+  if (error) return res.status(400).json({ error });
+
+  const { campo1, campo2, campo3, campo4, campo5, campo6 } = req.body;
+
+  const result = await pool.query(
+    `INSERT INTO videojuegos (campo1, campo2, campo3, campo4, campo5, campo6)
+     VALUES ($1,$2,$3,$4,$5,$6) RETURNING *`,
+    [campo1, campo2, campo3, campo4, campo5, campo6],
+  );
+
+  res.status(201).json(result.rows[0]);
+};
