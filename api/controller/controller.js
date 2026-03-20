@@ -28,3 +28,14 @@ export const obtenerVideojuegos = async (req, res) => {
   res.json(result.rows);
 };
 
+export const obtenerXId = async (req, res) => {
+  const id = req.params.id;
+  const result = await pool.query("SELECT * FROM videojuegos WHERE id=$1", [
+    id,
+  ]);
+  if (result.rows.length === 0) {
+    return res.status(404).json({ error: "Videojuego no encontrado" });
+  }
+  res.json(result.rows[0]);
+};
+
