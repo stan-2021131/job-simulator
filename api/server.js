@@ -5,7 +5,7 @@ import productsRoutes from './routes/routes.js';
 const app = express();
 app.use(express.json());
 
-app.use('/products', productsRoutes)
+app.use('/videojuegos', productsRoutes) //Se empezó por 
 
 app.get('/', (req, res) => {
   res.json({ message: 'API funcionando' });
