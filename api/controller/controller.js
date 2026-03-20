@@ -22,6 +22,31 @@ function validacion(body) {
 
   return null;
 }
+function validarParcial(body) {
+  for (const key in body) {
+    const value = body[key];
+
+    if (key === "campo1" && typeof value !== "string")
+      return "campo1 debe ser string";
+
+    if (key === "campo2" && typeof value !== "string")
+      return "campo2 debe ser string";
+
+    if (key === "campo3" && typeof value !== "string")
+      return "campo3 debe ser string";
+
+    if (key === "campo4" && !Number.isInteger(value))
+      return "campo4 debe ser integer";
+
+    if (key === "campo5" && typeof value !== "number")
+      return "campo5 debe ser float";
+
+    if (key === "campo6" && typeof value !== "boolean")
+      return "campo6 debe ser boolean";
+  }
+
+  return null;
+}
 
 export const obtenerVideojuegos = async (req, res) => {
   const result = await pool.query("SELECT * FROM videojuegos");
@@ -93,9 +118,12 @@ export const patch = async (req, res) => {
   const campos = req.body;
   const id = req.params.id;
 
-  if (Object.keys(campos).length === 0) {
+  if (!campos || Object.keys(campos).length === 0) {
     return res.status(400).json({ error: "No se ingresaron campos a cambiar" });
   }
+
+  const error = validarParcial(campos);
+  if (error) return res.status(400).json({ error });
 
   const llaves = Object.keys(campos);
   const valores = Object.values(campos);

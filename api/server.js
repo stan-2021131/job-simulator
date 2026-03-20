@@ -7,7 +7,7 @@ const app = express();
 app.use(express.json());
 app.use(cors());
 
-app.use('/videojuegos', productsRoutes) //Se empezó por 
+app.use('/videojuegos', productsRoutes) //Se empezó por rutas de videojuegos
 
 app.get('/', (req, res) => {
   res.json({ message: 'API funcionando' });
