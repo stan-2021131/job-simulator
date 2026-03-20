@@ -1,0 +1,26 @@
+services:
+  frontend:
+    build: ./frontend
+    ports:
+      - "8080:80"
+    volumes:
+      - ./frontend/public:/usr/share/nginx/html:ro
+    depends_on:
+      - backend
+  db:
+    image: postgres:15
+    container_name: postgres_db
+    env_file:
+      - .env
+    volumes:
+      - ./sql/init.sql:/docker-entrypoint-initdb.d/init.sql
+    ports:
+      - "${DB_PORT}:5432"
+  backend:
+    build: ./api
+    ports: 
+      - "${APP_PORT}:3000"
+    env_file:
+      - .env
+    depends_on:
+      - db
