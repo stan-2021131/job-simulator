@@ -1,12 +1,22 @@
 import express from 'express';
+import { connectWithRetry } from './db.js';
+import productsRoutes from './routes/routes.js';
 
 const app = express();
 app.use(express.json());
+
+app.use('/products', productsRoutes)
 
 app.get('/', (req, res) => {
   res.json({ message: 'API funcionando' });
 });
 
-app.listen(3000, () => {
-  console.log('Server running on port 3000');
-});
+const start = async () => {
+  await connectWithRetry();
+
+  app.listen(3000, () => {
+    console.log('🚀 Server running on port 3000');
+  });
+};
+
+start();
