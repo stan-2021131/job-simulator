@@ -1,9 +1,11 @@
 import express from 'express';
 import { connectWithRetry } from './db.js';
 import productsRoutes from './routes/routes.js';
+import cors from 'cors';
 
 const app = express();
 app.use(express.json());
+app.use(cors());
 
 app.use('/videojuegos', productsRoutes) //Se empezó por 
 
