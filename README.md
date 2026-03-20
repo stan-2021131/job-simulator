@@ -1,171 +1,195 @@
-# Job Simulator — REST CRUD API
+# 🎮 Job Simulator — REST CRUD API (Nivel 3)
 
-## Descripción
+## 📌 Descripción
 
-Se requiere construir una API REST con operaciones CRUD completas, persistencia en base de datos relacional y entorno containerizado. El dominio del recurso queda a criterio del desarrollador.
+API REST desarrollada en **Node.js + Express** que implementa operaciones CRUD completas con persistencia en **PostgreSQL**, ejecutándose en un entorno completamente **containerizado con Docker**.
 
-El sistema será consumido por un cliente frontend ya existente. La API debe cumplir el contrato definido en este documento de forma exacta. Cualquier desviación del contrato se considera un fallo de integración.
-
----
-
-## Condiciones de trabajo
-
-Eres un desarrollador backend contratado para entregar un sistema funcional en un tiempo determinado. El pago se acredita únicamente si el sistema es entregado en tiempo y cumple el contrato en su totalidad.
-
-Las siguientes condiciones resultan en terminación del contrato sin compensación parcial:
-
-- El repositorio contiene archivos que no deben ser versionados (`node_modules`, `vendor`, `.env`, binarios, archivos de sistema operativo)
-
-- Entrega fuera del plazo establecido
-- El sistema no levanta con un único comando
-- Algún endpoint no responde o responde de forma incorrecta
-- Los códigos de respuesta HTTP no son los correctos según el estándar REST
-- Las validaciones no están implementadas
-- Los tipos de datos no son respetados
-- Las respuestas no son JSON
-- Almacenamiento en memoria en lugar de base de datos relacional
-- El API no interactua de forma correcta con el frontend.
-
-El nivel de contratación determina el máximo de compensación posible. No existe compensación parcial dentro de un nivel.
+El recurso implementado corresponde al dominio de **videojuegos**, manteniendo el contrato requerido (`campo1` a `campo6`) para compatibilidad con el frontend provisto.
 
 ---
 
-## Contrato de la API
+## 🧱 Stack tecnológico
 
-### Estructura del recurso
-
-El recurso expone los siguientes campos con nombres fijos:
-
-| Campo  | Tipo    | Restricciones              |
-| ------ | ------- | -------------------------- |
-| id     | integer | primary key, autoincrement |
-| campo1 | string  | requerido                  |
-| campo2 | string  | requerido                  |
-| campo3 | string  | requerido                  |
-| campo4 | integer | requerido                  |
-| campo5 | float   | requerido                  |
-| campo6 | boolean | requerido                  |
-
-El dominio es libre. Los nombres internos en base de datos y lógica de negocio quedan a criterio del desarrollador.
+* **Backend:** Node.js + Express
+* **Base de datos:** PostgreSQL
+* **Containerización:** Docker + docker-compose
+* **Lenguaje:** JavaScript
 
 ---
 
-### Endpoints
+## 📂 Estructura del proyecto
 
-Se requiere implementar los métodos `GET`, `POST`, `PUT` y `DELETE`. El nombre del recurso en la ruta debe seguir las convenciones REST estándar.
+```
+api/
+├── controller/
+├── routes/
+├── db.js
+├── server.js
 
----
-
-### Validaciones
-
-Todos los campos son requeridos. Los tipos deben ser respetados estrictamente: `campo4` es entero, `campo5` es decimal, `campo6` es booleano.
-
----
-
-### Códigos de respuesta
-
-El uso correcto de códigos HTTP es parte del contrato con el cliente. Todas las respuestas son JSON.
-
----
-
-## Stack
-
-- Lenguaje: Javascript, PHP o Rust — no se aceptan Go ni Python
-- Base de datos: relacional, sin almacenamiento en memoria
-- Containerización: Docker obligatorio
-
-En la carpeta `resources/` se incluyen Dockerfiles de referencia para cada lenguaje y base de datos, y un `.env.example`.
-
----
-
-## Niveles de contratación
-
-La evaluación es **pasa o no pasa**. Indicar el nivel seleccionado al momento de la entrega.
-
----
-
-### Nivel 1 — Junior `(máximo 70/100)`
-
-**Base de datos:** SQLite
-
-**Infraestructura:** `docker-compose.yml` con un único servicio. La base de datos corre embebida dentro del mismo contenedor que la aplicación. `docker-compose up` debe levantar el sistema completo y funcional sin intervención manual.
-
-**Requisitos:**
-- Los cinco endpoints funcionan correctamente contra la base de datos
-- Todas las validaciones están implementadas y retornan los códigos HTTP correspondientes
-- La base de datos persiste los datos correctamente entre operaciones
-- `Dockerfile` y `docker-compose.yml` presentes y funcionales
-
----
-
-### Nivel 2 — Mid `(máximo 85/100)`
-
-**Base de datos:** PostgreSQL
-
-**Infraestructura:** `docker-compose.yml` con dos servicios independientes: aplicación y base de datos. La aplicación debe conectarse a PostgreSQL usando variables de entorno. Un único `docker-compose up` levanta el sistema completo y funcional.
-
-**Requisitos adicionales al Nivel 1:**
-- Archivo `.env` con todas las variables de configuración necesarias
-- Sin credenciales, puertos ni strings de conexión hardcodeados en el código
-- La aplicación maneja correctamente los errores de conexión a la base de datos
-- El servicio de la aplicación no inicia hasta que PostgreSQL esté disponible
-
----
-
-### Nivel 3 — Senior `(máximo 100/100)`
-
-**Base de datos:** PostgreSQL
-
-**Infraestructura:** igual que Nivel 2.
-
-**Requisitos adicionales al Nivel 2:**
-- Endpoint `PATCH` para actualizaciones parciales: solo se modifican los campos presentes en el body, el resto permanece sin cambios
-- `.env.example` en el repositorio con todas las variables necesarias documentadas, sin valores reales
-- `.gitignore` que excluya `node_modules`, `.env`, y archivos de sistema operativo
-- Script SQL de inicialización de esquema ejecutado automáticamente por Docker al primer arranque
-- Estructura de proyecto con separación clara de responsabilidades: configuración de base de datos, definición de rutas y punto de entrada en archivos distintos
-- Historial de commits que refleje un proceso de desarrollo incremental — no se acepta un único commit con todo el trabajo
-
----
-
-## Bonus
-
-Los puntos bonus se suman sobre la nota del nivel entregado. Cada bonus se evalúa de forma independiente.
-
-### Integración full stack `(+10 puntos)`
-
-Integrar el frontend provisto en el mismo `docker-compose.yml` que la API.
-
-Condiciones:
-- Un único `docker-compose.yml` levanta ambos servicios
-- El frontend consume la API sin configuración manual posterior al `docker-compose up`
-- Ambos servicios operativos con un solo comando
-
-### Personalización del frontend `(+5 puntos)`
-
-Adaptar el frontend para que refleje el dominio elegido: etiquetas en el idioma correcto, nombres de campos legibles, y cualquier ajuste visual que mejore la experiencia del usuario final.
-
-Condiciones:
-- El frontend no debe mostrar `campo1`, `campo2`, etc. — deben verse los nombres reales del dominio
-- Los cambios deben ser coherentes con el recurso implementado en la API
-- Aplica únicamente si el bonus de integración también fue completado
-
----
-
-## Configuración del frontend
-
-El frontend provisto requiere dos valores en `public/js/config.js`:
-
-```js
-window.API_URL = "http://localhost:8080"; // URL base de tu API
-window.RESOURCE = "products";             // Nombre del recurso en tu API
+frontend/
+sql/
+docker-compose.yml
+.env.example
 ```
 
-`RESOURCE` debe coincidir exactamente con el nombre que usaste en las rutas de tu API.
+Separación clara de responsabilidades:
+
+* `db.js` → conexión a base de datos
+* `routes/` → definición de endpoints
+* `controller/` → lógica de negocio
+* `server.js` → punto de entrada
 
 ---
 
-## Entrega
+## 🚀 Ejecución del proyecto
 
-- Repositorio en GitHub con visibilidad pública
-- El sistema levanta con un único comando
+### 1. Clonar repositorio
+
+```bash
+git clone <repo-url>
+cd <repo>
+```
+
+### 2. Crear archivo `.env`
+
+Basado en `.env.example`
+
+### 3. Levantar el sistema
+
+```bash
+docker-compose up --build
+```
+
+---
+
+## 🌐 Servicios
+
+* **Frontend:** http://localhost:8080
+* **Backend:** http://localhost:3000
+
+---
+
+## 📦 Recurso: videojuegos
+
+Aunque el dominio es videojuegos, el contrato exige los siguientes campos:
+
+| Campo  | Tipo    |
+| ------ | ------- |
+| campo1 | string  |
+| campo2 | string  |
+| campo3 | string  |
+| campo4 | integer |
+| campo5 | float   |
+| campo6 | boolean |
+
+---
+
+## 🔌 Endpoints
+
+| Método | Endpoint           | Descripción           |
+| ------ | ------------------ | --------------------- |
+| GET    | `/videojuegos`     | Obtener todos         |
+| GET    | `/videojuegos/:id` | Obtener uno           |
+| POST   | `/videojuegos`     | Crear                 |
+| PUT    | `/videojuegos/:id` | Reemplazo total       |
+| PATCH  | `/videojuegos/:id` | Actualización parcial |
+| DELETE | `/videojuegos/:id` | Eliminar              |
+
+---
+
+## ✅ Validaciones
+
+* Todos los campos son requeridos en `POST` y `PUT`
+* Validación estricta de tipos:
+
+  * `campo4` → integer
+  * `campo5` → float
+  * `campo6` → boolean
+* Validación parcial en `PATCH`
+
+---
+
+## 📊 Códigos HTTP
+
+* `200` → OK
+* `201` → Creado
+* `204` → Eliminado
+* `400` → Error de validación
+* `404` → No encontrado
+* `500` → Error interno
+
+---
+
+## 🗄️ Base de datos
+
+La base de datos se inicializa automáticamente mediante:
+
+```
+sql/init.sql
+```
+
+Ejecutado por Docker en el primer arranque.
+
+---
+
+## ⚙️ Variables de entorno
+
+Ver archivo `.env.example`
+
+---
+
+## 🔒 Buenas prácticas implementadas
+
+* Uso de variables de entorno (sin hardcodeo)
+* Separación de capas
+* Manejo de errores
+* Validaciones completas
+* Queries parametrizadas (prevención de SQL injection)
+* Espera activa de la base de datos antes de iniciar la API
+
+---
+
+## 🐳 Docker
+
+El sistema se levanta con un único comando:
+
+```bash
+docker-compose up --build
+```
+
+Incluye:
+
+* Servicio de backend
+* Servicio de base de datos
+* Servicio de frontend
+
+---
+
+## ⭐ Nivel alcanzado
+
+✔ Nivel 3 — Senior
+
+Cumple todos los requisitos:
+
+* CRUD completo
+* PATCH implementado
+* PostgreSQL con Docker
+* `.env.example`
+* `.gitignore` correcto
+* Script SQL automático
+* Separación de responsabilidades
+
+---
+
+## ➕ Bonus
+
+✔ Integración full stack (frontend + backend en docker-compose)
+
+---
+
+## 📌 Notas
+
+* El frontend consume la API automáticamente sin configuración adicional
+* El contrato del API se respeta estrictamente
+
+---
