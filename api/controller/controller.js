@@ -88,3 +88,28 @@ export const eliminarVideojuego = async (req, res) => {
 
   res.status(204).send();
 };
+
+export const patch = async (req, res) => {
+  const campos = req.body;
+  const id = req.params.id;
+
+  if (Object.keys(campos).length === 0) {
+    return res.status(400).json({ error: "No se ingresaron campos a cambiar" });
+  }
+
+  const llaves = Object.keys(campos);
+  const valores = Object.values(campos);
+
+  const setQuery = llaves.map((key, i) => `${key}=$${i + 1}`).join(", ");
+
+  const result = await pool.query(
+    `UPDATE videojuegos SET ${setQuery} WHERE id=$${llaves.length + 1} RETURNING *`,
+    [...valores, id],
+  );
+
+  if (result.rows.length === 0) {
+    return res.status(404).json({ error: "Not found" });
+  }
+
+  res.json(result.rows[0]);
+};
